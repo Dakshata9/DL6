@@ -6,7 +6,6 @@ const path = require("path");
 app.use(bodyParser.json());
 
 //set EJS as view engine
-
 app.set("view engine", "ejs");
 
 app.get("/", async (request, response) => {
