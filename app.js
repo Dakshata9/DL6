@@ -10,10 +10,18 @@ app.set("view engine", "ejs");
 
 app.get("/", async (request, response) => {
   const allTodos = await Todo.getTodos();
+  const overdue = await Todo.overdue();
+  const dueLater = await Todo.dueLater();
+  const dueToday = await Todo.dueToday();
   if (request.accepts("html")) {
-    response.render("index", { allTodos });
+    response.render("index", {
+      allTodos,
+      overdue,
+      dueToday,
+      dueLater,
+    });
   } else {
-    response.json({ allTodos });
+    response.json({ allTodos, overdue, dueToday, dueLater });
   }
 });
 
