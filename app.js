@@ -13,7 +13,6 @@ app.use(cookieParser("shh! some secret string"));
 app.use(csrf("this_should_be_32_charactes_long", ["PUT", "POST", "DELETE"]));
 app.use(express.static(path.join(__dirname, "public")));
 
-//set EJS as view engine
 app.set("view engine", "ejs");
 
 app.get("/", async (request, response) => {
