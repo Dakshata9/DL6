@@ -33,9 +33,6 @@ app.get("/", async (request, response) => {
     });
   } else {
     response.json({ overdue, dueToday, dueLater,completedItems });
-  }catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
   }
 });
 
@@ -95,9 +92,6 @@ app.delete("/todos/:id", async (request, response) => {
     } else {
       return response.json(false);
     }
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
   }
 });
 
