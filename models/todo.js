@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
+    
+     setCompletionStatus() {
+      return this.update({
+        completed: !this.completed,
+      });
+    }
    
     static getTodos() {
       return this.findAll({ order: [["id", "ASC"]] });
@@ -51,12 +57,18 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
-    markAsCompleted() {
-      return this.update({ completed: true });
+   deleteTodo() {
+      return this.destroy({
+        where: {
+          id: this.id,
+        },
+      });
     }
-    static async getTodos() {
+
+    static getCompletedTodos() {
       return this.findAll({
-        order: [["id", "ASC"]],
+        where: { completed: { [Op.eq]: true } },
+        order: [["id", "DESC"]],
       });
     }
   }
