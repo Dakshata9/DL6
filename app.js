@@ -17,14 +17,15 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
 app.get("/", async (request, response) => {
-  
+  const allTodos = await Todo.getTodos();
   const overdue = await Todo.overdue();
   const dueLater = await Todo.dueLater();
   const dueToday = await Todo.dueToday();
   const completedItems = await Todo.getcompletedTodos();
   if (request.accepts("html")) {
     response.render("index", {
-     
+      title: "Todo Application",
+      allTodos,
       overdue,
       dueToday,
       dueLater,
