@@ -1,80 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="<%= csrfToken %>" />
-    <title>My Todo Application</title>
-    <link rel="stylesheet" href="/css/style.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="/js/script.js" type="text/javascript"></script>    
-  </head>
-  
-  <script>
-    //updating and deleting todo
-    let csrfToken = document
-      .querySelector('meta[name="csrf-token"]')
-      .getAttribute("content");
-    // eslint-disable-next-line no-unused-vars
-    const updateTodo = (id) => {
-      fetch(`/todos/${id}`, {
-        method: "put",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          _csrf: csrfToken,
-        }),
-      })
-        .then((resl) => {
-          if (resl.ok) {
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="csrf-token" content="<%= csrfToken %>">
+        <link href="./css/style.css" rel="stylesheet">
+        <title>Aakash Todo Manager</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="./css/style.css" rel="stylesheet">
+        <script>
+          const token = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+          const updateTodo = (id) => {
+          const bool = document.querySelector(`#checkbox-${id}`).checked
+          console.log(bool);
+          fetch(`/todos/${id}`, {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body : JSON.stringify({
+            _csrf : token,
+            completed : bool
+            })
+          })
+          .then((res) => {
+            if (res.ok) {
+              window.location.reload();
+            }
+          })
+          .catch(err);{
+          console.log(err);
+          }
+        };
+            function deleteTodo(id) {
+        fetch(`/todos/${id}`,{
+          method: "delete",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({
+            "_csrf":token
+          })
+        })
+         .then((res) => {
+          if (res.ok) {
             window.location.reload();
           }
-        })
-        .catch((err) => console.error(err));
-    };
-    
-    const deleteTodo = (id) => {
-      fetch(`/todos/${id}`, {
-        method: "delete",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          _csrf: csrfToken,
-        }),
-      })
-        .then((resl) => {
-          if (resl.ok) {
-            window.location.reload();
-          }
-        })
-        .catch((err) => console.error(err));
-    };
-  </script>
-  <body>
-    <!-- contents of header.js post-->
-  </head>
-  <body>
-    <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
-        <header><%- include("header.ejs") %></header>
+         })
+         .catch((err) => console.erroe(err));
+      }
+        </script>
+    </head>
+    <body>
+       <div class= "grid  grid-cols-6">
+        <div class="col-start-3 col-span-2">
+        <%- include("header.ejs") %> 
         <form action="/todos" method="post">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <div class="flex gap-7 py-5">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="flex gap-2 py-4">
+                <div class="flex-auto">
+                    <input type="text" name="title" placeholder="what's next" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm" required />
+                </div>
             <div class="flex-auto">
-              <input type="text" name="title" placeholder="What's next?" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm" required/>
-            </div>
-            <div class="flex-auto">
-              <input type="date" name="dueDate" required class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4" value='<%= new Date().toLocaleDateString("en-CA"); %>'/>
+                <input type="date" name="dueDate" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4 " />
             </div>
             <div class="flex-none">
-              <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Add </button>
+                <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Add</button>
+            </div>  
             </div>
-          </div>
         </form>
-        <br/>
-        <%- include("todos.ejs", {title: "Overdue",data: overdueItems}) %>         
-        <%- include("todos.ejs", {title: "Due Today",data: dueTodayItems}) %>          
-        <%- include("todos.ejs", {title: "Due Later",data: dueLaterItems}) %>        
-        <%- include("todos.ejs", {title: "Completed Items",data: completedItems}) %>
-      </div>
+        <%- include('todos.ejs', {title: "Overdue", data: overdue}) %>
+        <%- include('todos.ejs', {title: "Due Today", data: dueToday}) %>
+        <%- include('todos.ejs', {title: "Due Later", data: dueLater}) %>
+        <%- include('todos.ejs', {title: "Completed Items", data: completedItems}) %>
     </div>
-  </body>
+</div>
+    </body>
 </html>
