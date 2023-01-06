@@ -1,5 +1,6 @@
 "use strict";
-const { Model,Op } = require("sequelize");
+const { Model, Op } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -13,18 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
-    
-     setCompletionStatus() {
-      return this.update({
-        completed: !this.completed,
-      });
+    markAsCompleted() {
+      return this.update({ completed: true });
     }
-   
+    deletetodo() {
+      return this.removetask(id);
+    }
     static getTodos() {
       return this.findAll({ order: [["id", "ASC"]] });
     }
-
-   static async overdue() {
+    static overdue() {
       return this.findAll({
         where: {
           dueDate: {
@@ -35,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
-    static async dueToday() {
+    static dueToday() {
       return this.findAll({
         where: {
           dueDate: {
@@ -46,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
-    static async dueLater() {
+    static dueLater() {
       return this.findAll({
         where: {
           dueDate: {
@@ -57,22 +56,26 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
-   deleteTodo() {
+    static completedItems() {
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static async remove(id) {
       return this.destroy({
         where: {
-          id: this.id,
+          id,
         },
       });
     }
-
-    static getCompletedTodos() {
-      return this.findAll({
-        where: { completed: { [Op.eq]: true } },
-        order: [["id", "DESC"]],
-      });
+    setCompletionStatus(bool) {
+      return this.update({ completed: bool });
     }
   }
-   
+
   Todo.init(
     {
       title: DataTypes.STRING,
