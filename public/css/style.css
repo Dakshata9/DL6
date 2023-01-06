@@ -1,14 +1,9 @@
 body {
   font-family: "Courier New", Courier, monospace;
-  background: #ffffff;
-  padding: 4%;
+  background: black;
+  
 }
 
-table,
-th,
-td {
-  border: 2px solid red;
-}
 .Todo-Item:hover .trash-icon {
   display: block;
 }
